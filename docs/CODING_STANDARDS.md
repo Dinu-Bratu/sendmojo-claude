@@ -12,6 +12,36 @@ Once finalized, this file becomes the single source of truth that `CLAUDE.md` an
 
 ---
 
+## Guiding Principles
+
+[#guiding-principles](#guiding-principles)
+
+Every decision in this document — and every choice made while writing code
+against it — should be checked against three goals, in this order of
+priority when they conflict:
+
+1. **Readability** — code should be understandable at a glance, not require
+   the reader to hold extra context in their head or reverse-engineer intent
+   from implementation. If a construct is clever but opaque, it loses to a
+   more obvious alternative.
+2. **Maintainability** — code should be safe and low-friction to change
+   later, by someone other than the original author (including a future
+   version of that same author, or a different AI agent picking up the file
+   cold). Conventions that make refactors safer or intent more explicit —
+   named exports, consistent documentation, explicit error types — exist in
+   service of this goal.
+3. **Testability** — code should be structured so it can be reliably
+   verified and changed with confidence. Logic that resists testing is logic
+   that resists safe modification.
+
+Logical correctness is assumed as a baseline, not listed as a competing
+priority — these three are what the codebase optimizes for once the code
+already works. When a style decision in this document (or a future one not
+yet covered) seems arbitrary on its own, it's worth checking whether it
+actually traces back to one of these three.
+
+---
+
 ## 1. Braces & Blocks
 
 Always use curly braces for every control structure —
@@ -83,12 +113,15 @@ Custom `Error` subclasses (e.g. `NotFoundError`, `ValidationError`) thrown from 
 
 ## 10. Imports & Module Style
 
-- **Option A** — Named exports only, no `export default` anywhere (improves refactor-safety and
-  auto-import accuracy).
-- **Option B** — One `export default` per file for that file's primary entity, named exports for
-  everything secondary.
+Named exports only — no `export default` anywhere in the codebase. This
+improves refactor-safety (renaming an export forces every import site to
+update, rather than allowing a default export to silently accumulate
+different local names across the codebase) and produces more reliable
+IDE auto-import suggestions.
 
-Import ordering (regardless of A/B above): external packages → internal aliases/modules → relative imports, each group alphabetized, enforced via `eslint-plugin-import` or `eslint-plugin-simple-import-sort`.
+Import ordering: external packages → internal aliases/modules → relative
+imports, each group alphabetized, enforced via `eslint-plugin-import` or
+`eslint-plugin-simple-import-sort`.
 
 ---
 
@@ -112,17 +145,66 @@ Documentation length should scale with the function's complexity, not its visibi
 
 ## 12. Testing Conventions
 
-Framework:
-- Jest
+**Framework — split by layer, not by preference:**
 
-Style:
-- **Option A** — One assertion focus per `it()` block, descriptive behavior-based names ("returns 404 when request does not exist").
-- **Option B** — Grouped assertions per scenario where they share setup, still one logical behavior per test.
+- **Jest** — unit and integration tests for backend/middle-tier code: Express
+  route handlers, Prisma data-access logic, business rules (Mojo Credits,
+  moderation status transitions, metric bucketing, etc.).
+- **Playwright** — end-to-end tests for front-end/browser-level behavior:
+  actual user flows through the server-rendered pages (creating a request,
+  sending mojo, viewing a request's bucketed metrics).
 
-→ **YOUR CHOICE (style):**
+This is a deliberate two-tool split along real architectural lines, not
+tool-chasing — each framework is used for the layer it's actually built for.
 
-*(File naming/location for tests — e.g. colocated `*.test.ts` vs. a `__tests__/` directory — is
-a plumbing/structure decision and will be finalized in the directory-structure pass, not here.)*
+**Style — matched to each framework's natural granularity:**
+
+- **Jest tests: one behavior per `it()`.** Setup is typically cheap
+  (constructing an object, calling a pure function, seeding a small amount of
+  test data), so there's little cost to keeping each test narrow, and a
+  failing test's *name* should communicate exactly what broke without
+  needing to read the assertion body.
+
+```ts
+  describe("isMojoCreditAvailable", () => {
+    it("returns true when user has credits remaining", () => {
+      expect(isMojoCreditAvailable(userWithCredits)).toBe(true);
+    });
+
+    it("returns false when user has zero credits", () => {
+      expect(isMojoCreditAvailable(userWithNoCredits)).toBe(false);
+    });
+  });
+```
+
+- **Playwright tests: grouped assertions per user scenario.** Browser/page
+  setup is expensive, both to write and to run — so one test represents one
+  complete, meaningful user scenario, with multiple assertions verifying
+  different facets of that scenario's outcome, rather than one assertion per
+  test forcing redundant setup.
+
+```ts
+  test("user can create a request and see it listed", async ({ page }) => {
+    await page.goto("/requests/new");
+    await page.fill("#title", "My cat is gone");
+    await page.fill("#body", "Please send mojo.");
+    await page.click("button[type=submit]");
+
+    await expect(page).toHaveURL(/\/requests\/\d+/);
+    await expect(page.locator("h1")).toHaveText("My cat is gone");
+    await expect(page.locator(".status-badge")).toHaveText("Pending");
+  });
+```
+
+This is an intentional split, not an inconsistency: Jest tests are granular
+because backend logic is granular and cheap to isolate; Playwright tests are
+scenario-based because a real user flow is the actual unit of value being
+verified, and re-running full browser setup per assertion would make the
+suite slow without adding meaningful signal.
+
+*(Test file naming/location — colocated `*.test.ts` vs. a dedicated
+`__tests__`/`e2e` directory — is a plumbing/structure decision, deferred to
+the directory-structure pass.)*
 
 ---
 
