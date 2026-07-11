@@ -16,7 +16,7 @@ Examples:
 **TEXT:** My 12-year-old cat Gibson died this weekend. I'm so bummed. Send mojo.
 
 > **TITLE:** The &dollar;950 Mistake
-**MESSAGE:** A &dollar;2,500 Takamine was marked down to &dollar;950. I hesitated. Someone else didn't. Please send mojo. 
+**MESSAGE:** A &dollar;2,500 Takamine was marked down to &dollar;950. I hesitated. Someone else didn't. Send mojo. 
 
 > **TITLE:** I'm unemployed...again!
 **MESSAGE:** Just got laid off, along with 30 other co-workers. Now I'm unemployed. Send mojo. 
