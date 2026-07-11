@@ -6,7 +6,7 @@ project "plumbing" are deliberately out of scope here and will be covered in a s
 
 ## How to use this document
 
-Each numbered section below presents a short menu of modern, defensible options for a single style decision. Nothing here is a legacy rule-of-thumb from 2012 — every option listed is something you'd see in a current, well-maintained TypeScript/Node.js codebase. Pick one option per section (or write in your own variant) by filling in the **`→ YOUR CHOICE:`** line.
+Each numbered section below presents a short menu of modern, defensible options for a single style decision. Nothing here is a legacy rule-of-thumb from 2012 — every option listed is something you'd see in a current, well-maintained TypeScript/Node.js codebase.
 
 Once finalized, this file becomes the single source of truth that `CLAUDE.md` and `AGENTS.md` both point to — so whichever flavor you pick here is what both Claude and Codex will be told to follow.
 
@@ -68,6 +68,7 @@ Always use double quotes for strings, backticks only when interpolating.
 ## 3. Semicolons
 
 Always use semicolons explicitly (no reliance on ASI).
+
 ---
 
 ## 4. Indentation
@@ -133,6 +134,8 @@ Documentation length should scale with the function's complexity, not its visibi
 
 **Anti-pattern:** a one-line helper wrapped in a multi-paragraph doc comment. If the documentation is longer and more elaborate than the logic it describes, that's a signal the comment is padding, not information.
 
+**ISSUE:** Is the typescript below an example of the anti-pattern or an example of a positive pattern? This is unclear from the text above. 
+
 ```ts
   /** Returns true if the user has at least one Mojo Credit available. */
   function isMojoCreditAvailable(user: User): boolean {
@@ -141,6 +144,26 @@ Documentation length should scale with the function's complexity, not its visibi
 ```
 
 - Every recursive function must carry a `// Recursion alert` comment placed directly above the recursive call site itself (not above the function declaration) — so it flags the exact line where the stack grows, which is what a reader debugging a stack-depth or infinite-recursion issue actually needs to find fast.
+
+```ts
+  /**
+   * Counts all descendant replies beneath a given mojo response.
+   * @param responseId - The response whose descendant tree is being counted.
+   * @returns Total number of nested replies beneath this response.
+   */
+  function countDescendantReplies(responseId: string): number {
+    const children = getChildResponses(responseId);
+    if (children.length === 0) {
+      return 0;
+    }
+
+    // Recursion alert
+    return children.reduce(
+      (total, child) => total + 1 + countDescendantReplies(child.id),
+      0,
+    );
+  }
+```
 ---
 
 ## 12. Testing Conventions
@@ -226,6 +249,5 @@ the directory-structure pass.)*
 
 ## Open Items
 
-- [x] Fill in every `→ YOUR CHOICE:` line above
 - [ ] Once finalized, bump this doc's Status from "Draft" to "Adopted vX"
 - [ ] `CLAUDE.md` and `AGENTS.md` should be updated only if they need tool-specific instructions beyond "read and follow this file" — the actual rules should never be duplicated there

@@ -115,7 +115,7 @@ Examples:
 
 ### Personal
 
-> Played the perfect Takamine 12-string. Walked away. Returned later and it was gone. Please send mojo.
+> Played the perfect Takamine 12-string. Walked away. Returned later and it was gone. Send mojo.
 
 ### Friends & Family
 
@@ -186,6 +186,8 @@ Example:
 
 ### 6.1 Request Title
 
+The Request Title is a required field.
+
 Maximum: 64 characters.
 
 Example:
@@ -193,6 +195,8 @@ Example:
 > The One That Got Away
 
 ### 6.2 Request Body
+
+The Request Body is a required field.
 
 Maximum: 100 characters.
 
@@ -205,6 +209,8 @@ Examples:
 > My cat Fluffy died this weekend. She was 12. I’m heartbroken. Please send mojo.
 
 ### 6.3 Image
+
+The Request Image is an optional field.
 
 Each request may include one optional image.
 
@@ -246,6 +252,8 @@ There are two distinct actions:
 A lightweight acknowledgment.
 
 No text required.
+
+ISSUE: Need to describe the workflow if there is no Optional Response. Should users just be able to "Send Mojo" immediately -- perhaps some kind of "Send Mojo" button.
 
 ### 7.2 Optional Response
 
@@ -801,14 +809,12 @@ A dynamic host is required.
 
 Reasonable early options:
 
-* Azure App Service plus PostgreSQL
-* Azure Container Apps plus PostgreSQL
-* Render
-* Fly.io
-* Railway
-* DigitalOcean App Platform
-
-Given the C#/.NET direction, Azure App Service is a natural starting point.
+* Node.js
+* TypeScript
+* Express
+* PostgreSQL
+* Prisma
+* Azure App Service
 
 Local development should be fully supported before cloud deployment.
 
