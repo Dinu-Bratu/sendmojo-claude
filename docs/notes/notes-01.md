@@ -198,7 +198,7 @@ These are perfect TDD targets because expected behavior is clear.
 
 ### Test Parallel
 
-POST /api/requests rejects body over 100 chars
+POST /api/requests rejects body over 128 chars
 POST /api/requests rejects missing request type
 POST /api/requests accepts valid personal request
 POST /api/requests returns 401 for anonymous user
@@ -228,7 +228,7 @@ Tests first:
 * missing request type fails
 * invalid request type fails
 * title over 64 chars fails
-* body over 100 chars fails
+* body over 128 chars fails
 * more than 3 tags fails
 * missing system tag fails
 * political/off-topic enforcement is not automated in V1.0

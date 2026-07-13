@@ -36,7 +36,7 @@ Examples:
 
 > Mojo sent. Sorry, man. I lost my cat two years ago and it wrecked me.
 
-> Mojo sent. We all have one guitar that got away.
+> We all have one guitar that got away. Mojo sent.
 
 The phrase “mojo” was intentionally non-religious and non-denominational. It did not require prayer, faith, belief, or shared ideology. It simply meant acknowledgment, goodwill, and human recognition.
 
@@ -192,17 +192,17 @@ Maximum: 64 characters.
 
 Example:
 
-> The One That Got Away
+> The Guitar That Got Away
 
 ### 6.2 Request Body
 
 The Request Body is a required field.
 
-Maximum: 100 characters.
+Maximum: 128 characters.
 
 Examples:
 
-> Played the perfect Takamine 12-string. Walked away. Returned later and it was gone. Please send mojo.
+> Played the perfect Takamine 12-string. Walked away. Returned later and it was gone. Send mojo.
 
 > Lifelong Broncos fan. That playoff loss still stings. Please send mojo.
 
@@ -253,11 +253,11 @@ A lightweight acknowledgment.
 
 No text required.
 
-ISSUE: Need to describe the workflow if there is no Optional Response. Should users just be able to "Send Mojo" immediately -- perhaps some kind of "Send Mojo" button.
+ISSUE: Need to describe the workflow if there is no Optional Response. Should users just be able to "Send Mojo" immediately -- perhaps some kind of "Send Mojo" button?
 
 ### 7.2 Optional Response
 
-Maximum: 100 characters.
+Maximum: 128 characters.
 
 Examples:
 
@@ -277,14 +277,15 @@ SendMojo distinguishes between private precision and public restraint.
 
 ### 8.1 Requester Metrics
 
-The requester can always see exact metrics for their own request.
+The requester can always see exact metrics for his or her own request.
 
 Example:
 
 > Private metrics
 > Mojo received: 7
 > Responses: 2
-> These counts are visible only to you until public thresholds are reached.
+
+These counts are visible only to you until public thresholds are reached.
 
 ### 8.2 Public Metrics
 
@@ -294,8 +295,8 @@ Public counts are hidden until a configurable threshold is reached.
 
 Suggested threshold:
 
-Mojo Received: 10
-Responses: 5
+> Mojo Received: 10
+> Responses: 5
 
 Once the threshold is reached, public metrics are displayed using buckets rather than exact values.
 
@@ -319,11 +320,9 @@ Request authors always see exact counts.
 
 Example:
 
-Private Metrics
-
-Mojo Received: 7
-
-Responses: 2
+> Private Metrics
+> Mojo Received: 7
+> Responses: 2
 
 These counts are visible only to you until public thresholds are reached.
 
@@ -372,7 +371,7 @@ Suggested V0.1 model:
 * Sending mojo or participating constructively may replenish credits.
 * Exact earning rules are TBD.
 
-No user may buy their way into additional expressive power.
+No user may buy his or her way into additional expressive power.
 
 ---
 
@@ -702,6 +701,8 @@ Constraint:
 
 * One user may send mojo to the same request once.
 
+ISSUE: Let's discuss permitting a responder to make repeated commenting-related posts to the same thread but only one (system generated?) "Mojo Sent" response. The same is true for the OP. He or she should be able to respond to as many responses as he or she wants.
+
 ### 15.6 MojoResponse
 
 Fields:
@@ -769,7 +770,6 @@ The request should focus on acknowledgment, not spectacle.
 
 V0.1 should include:
 
-* email verification
 * rate limiting by IP
 * rate limiting by account
 * CSRF protection
@@ -796,7 +796,7 @@ Cost protection:
 
 Porkbun static hosting is not sufficient for the full SendMojo application because V0.1 requires:
 
-* authentication
+* authentication (ISSUE: Is this really true? We're not really 'authenticating' the user; only associating him or her with some local storage blob or giving him or her the ability to pull down a new storage blob on, say, a new machine using old credentials)
 * database storage
 * request creation
 * response creation
@@ -831,7 +831,7 @@ V0.1 is successful if a user can:
 5. Upload one symbolic image for review.
 6. Send mojo to another request.
 7. Leave a short optional response.
-8. See private exact metrics on their own request.
+8. See private exact metrics on his or her own request.
 9. See public bucketed metrics only after thresholds are crossed.
 10. Understand the site’s purpose from the About page.
 11. View the GitHub repository link from the Open Source page.
